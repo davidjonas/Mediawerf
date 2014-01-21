@@ -1,0 +1,15 @@
+Installing python dependencies:
+
+try running:
+
+easy_install
+
+If you get command not found then you need to install setuptools:
+
+wget https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py -O - | sudo python
+
+After that, install socketIO-client
+
+sudo easy_install socketIO-client
+
+That's all you need
