@@ -8,10 +8,10 @@ interval = 1
 
 
 #read port from commandline python wind_managment.py host 8080
-if len(sys.argv) >= 4:
+if len(sys.argv) >= 3:
     try:
-        port = int(sys.argv[3])
-        host = sys.argv[2]
+        port = int(sys.argv[2])
+        host = sys.argv[1]
     except:
         print("Argument error, Usage: python wind_managment.py host port")
 
