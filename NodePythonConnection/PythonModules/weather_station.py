@@ -20,6 +20,7 @@ class WeatherStation(threading.Thread):
 
 
     def __init__(self, speedPin = 27, directionPin = 17, windSpeedCallback = None, windDirectionCallback = None):
+        threading.Thread.__init__(self)
         self.speedPin = speedPin
         self.directionPin = directionPin
 
