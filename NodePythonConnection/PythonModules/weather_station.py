@@ -54,7 +54,7 @@ class WeatherStation(threading.Thread):
             self._speed_interrupt()
             if self.current > self.nextStep:
                 self._on_wind_speed_update(self._calcSpeed())
-                self._on_wind_speed_update(self._read_channel(0))
+                self._on_wind_direction_update(self._read_channel(0))
                 self.nextStep = self.current + self.STEP
             time.sleep(0.1)
 
