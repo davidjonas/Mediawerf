@@ -3,6 +3,7 @@ __author__ = 'David Jonas'
 import time
 import RPi.GPIO as GPIO
 import threading
+import spidev
 
 class WeatherStation(threading.Thread):
 
@@ -13,16 +14,18 @@ class WeatherStation(threading.Thread):
     val = 1
     prevVal = 1
     speedPin = 27
-    directionPin = 17
+    directionChannel = 0
     _windSpeedCallbacks = []
     _windDirectionCallbacks = []
     exitFlag = False
+    spi = None
 
 
-    def __init__(self, speedPin = 27, directionPin = 17, windSpeedCallback = None, windDirectionCallback = None):
+    def __init__(self, speedPin = 27, directionChannel = 0, windSpeedCallback = None, windDirectionCallback = None):
         threading.Thread.__init__(self)
         self.speedPin = speedPin
-        self.directionPin = directionPin
+        self.directionChannel = directionChannel
+        self.spi = spidev.SpiDev()
 
         if windSpeedCallback is not None:
             self._windSpeedCallbacks.append(windSpeedCallback)
@@ -35,6 +38,9 @@ class WeatherStation(threading.Thread):
             self._windDirectionCallbacks = []
 
     def run(self):
+        #Wind direction setup
+        self.spi.open(0,0)
+
         GPIO.cleanup()
         GPIO.setmode(GPIO.BCM)
 
@@ -48,8 +54,14 @@ class WeatherStation(threading.Thread):
             self._speed_interrupt()
             if self.current > self.nextStep:
                 self._on_wind_speed_update(self._calcSpeed())
+                self._on_wind_speed_update(self._read_channel(0))
                 self.nextStep = self.current + self.STEP
             time.sleep(0.1)
+
+    def _read_channel(self, channel):
+        adc = spi.xfer2([1,(8+channel)<<4,0])
+        data = ((adc[1]&3) << 8) + adc[2]
+        return data
 
     def _speed_interrupt(self):
         self.val = GPIO.input(self.speedPin)
