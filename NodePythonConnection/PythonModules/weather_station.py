@@ -41,7 +41,6 @@ class WeatherStation(threading.Thread):
         #Wind direction setup
         self.spi.open(0,0)
 
-        GPIO.cleanup()
         GPIO.setmode(GPIO.BCM)
 
         #Wind speed reading
@@ -57,6 +56,8 @@ class WeatherStation(threading.Thread):
                 self._on_wind_direction_update(self._read_channel(0))
                 self.nextStep = self.current + self.STEP
             time.sleep(0.1)
+        GPIO.cleanup()
+
 
     def _read_channel(self, channel):
         adc = self.spi.xfer2([1, (8+channel) << 4, 0])
