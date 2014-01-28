@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 __author__ = 'David Jonas'
 
 import time
@@ -5,8 +6,26 @@ import RPi.GPIO as GPIO
 import threading
 import spidev
 
+
 class WeatherStation(threading.Thread):
 
+    timesToChange = 3
+    currentDir = 0
+    nextDir = 0
+    counterTimesRep = 0
+    NUMDIRS = 8
+    #there was a problem with the function. The values were never arriving to 220.
+    #multiplying the values to this factor solved the problem
+    clippingFactor = 1.25
+    #ADC readings:
+    #These directions match 1-for-1 with the values in adc, but
+    #will have to be adjusted as noted above. Modify 'dirOffset'
+    #to which direction is 'away' (it's West here).
+    #adc = [26, 45, 77, 118, 161, 196, 220, 256]
+    #with this small adjustment we had better results detecting northwest
+    adc = [26, 45, 77, 118, 161, 186, 220, 256]
+    strVals = ["W","NW","N","SW","NE","S","SE","E"]
+    dirOffset = 0
     STEP = 1000
     revs = 0
     current = int(time.time()*1000)
@@ -26,6 +45,8 @@ class WeatherStation(threading.Thread):
         self.speedPin = speedPin
         self.directionChannel = directionChannel
         self.spi = spidev.SpiDev()
+           
+
 
         if windSpeedCallback is not None:
             self._windSpeedCallbacks.append(windSpeedCallback)
@@ -40,8 +61,6 @@ class WeatherStation(threading.Thread):
     def run(self):
         #Wind direction setup
         self.spi.open(0,0)
-
-        GPIO.cleanup()
         GPIO.setmode(GPIO.BCM)
 
         #Wind speed reading
@@ -54,15 +73,54 @@ class WeatherStation(threading.Thread):
             self._speed_interrupt()
             if self.current > self.nextStep:
                 self._on_wind_speed_update(self._calcSpeed())
-                self._on_wind_direction_update(self._read_channel(0))
+                self._on_wind_direction_update(self._calcWindDir(0))
+                #self._on_wind_direction_update(self._read_channel(0))
                 self.nextStep = self.current + self.STEP
             time.sleep(0.1)
+	GPIO.cleanup()
 
+    #problem, the value return doesn arrived to the last two directions (over 900)
     def _read_channel(self, channel):
-        adc = self.spi.xfer2([1,(8+channel)<<4,0])
-        data = ((adc[1]&3) << 8) + adc[2]
+        adcLocal = self.spi.xfer2([1,(8+channel)<<4,0])
+        data = ((adcLocal[1]&3) << 8) + adcLocal[2]
         return data
 
+ 
+    def _calcWindDir(self, channel):
+	val =  self._read_channel(channel)
+	#val = self._readadc(channel, self.SPICLK, self.SPIMOSI, self.SPIMISO, self.SPICS)
+	
+        #Shift to 255 range
+	
+        print "val before shift: %s"%val
+        val >>=2;
+        reading = float(val*clippingFactor)
+        print "reading after shift: %s"%reading
+        
+        #Look the reading up in directions table. Find the first value
+        #that's >= to what we got.
+        for x in range(len(self.adc)):
+            if self.adc[x] >= reading:
+                break;
+        x = (x + self.dirOffset) % 8
+        if x !=  self.currentDir:
+            if x !=  self.nextDir:
+                    self.nextDir = x
+                    self.counterTimesRep = 1
+            else:
+                if self.counterTimesRep >= self.timesToChange:
+                    self.counterTimesRep = 0
+                    self.currentDir = self.nextDir
+                    self.nextDir = -1
+                else:
+                    self.counterTimesRep=self.counterTimesRep+1                
+
+        print "Dir: "
+        print self.strVals[x]
+        #print self.strVals[self.currentDir]
+        print " "
+    
+     
     def _speed_interrupt(self):
         self.val = GPIO.input(self.speedPin)
         if self.prevVal == 1 and self.val == 0:
