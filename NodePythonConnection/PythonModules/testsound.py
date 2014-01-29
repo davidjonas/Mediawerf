@@ -40,6 +40,18 @@ def handle(key):
             ac.pause("sample3.wav")
         else:
             ac.play_sound("sample3.wav")
+    if key == 't':
+        if ac.is_playing("sample4.wav"):
+            ac.go_to_seconds("sample4.wav", 0)
+            ac.pause("sample4.wav")
+        else:
+            ac.play_sound("sample4.wav")
+    if key == 'y':
+        if ac.is_playing("sample5.wav"):
+            ac.go_to_seconds("sample5.wav", 0)
+            ac.pause("sample5.wav")
+        else:
+            ac.play_sound("sample5.wav")
     if key == 'a':
         current = ac.get_volume("bg02.wav")
         if current < 1.0:
