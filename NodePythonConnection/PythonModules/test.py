@@ -21,6 +21,7 @@ ws = WeatherStation(windSpeedCallback=speedUpdate, windDirectionCallback=directi
 print "starting weather station thread."
 ws.start()
 
+com.wait_forever()
 
 while True:
     try:
