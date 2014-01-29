@@ -23,3 +23,9 @@ class Broadcaster(object):
 
     def on(self, event, callback):
         self.socketIO.on(event, callback)
+
+    def wait(self, millis):
+        self.socketIO.wait(millis)
+
+    def wait_forever(self):
+        self.socketIO.wait()
