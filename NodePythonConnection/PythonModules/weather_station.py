@@ -14,7 +14,7 @@ class WeatherStation(threading.Thread):
     nextDir = 0
     counterTimesRep = 0
     NUMDIRS = 8
-    #there was a problem with the function. The values were never arriving to 220.
+    #there was a problem with the wind direction function. The values were never arriving to 220.
     #multiplying the values to this factor solved the problem
     clippingFactor = 1.25
     #ADC readings:
@@ -39,14 +39,11 @@ class WeatherStation(threading.Thread):
     exitFlag = False
     spi = None
 
-
     def __init__(self, speedPin = 27, directionChannel = 0, windSpeedCallback = None, windDirectionCallback = None):
         threading.Thread.__init__(self)
         self.speedPin = speedPin
         self.directionChannel = directionChannel
         self.spi = spidev.SpiDev()
-           
-
 
         if windSpeedCallback is not None:
             self._windSpeedCallbacks.append(windSpeedCallback)
@@ -74,12 +71,11 @@ class WeatherStation(threading.Thread):
             if self.current > self.nextStep:
                 self._on_wind_speed_update(self._calcSpeed())
                 self._on_wind_direction_update(self._calcWindDir(0))
-                #self._on_wind_direction_update(self._read_channel(0))
                 self.nextStep = self.current + self.STEP
             time.sleep(0.1)
 
-	GPIO.cleanup()
-    #problem, the value return doesn arrived to the last two directions (over 900)
+        GPIO.cleanup()
+
     def _read_channel(self, channel):
         adcLocal = self.spi.xfer2([1,(8+channel)<<4,0])
         data = ((adcLocal[1]&3) << 8) + adcLocal[2]
@@ -87,15 +83,11 @@ class WeatherStation(threading.Thread):
 
  
     def _calcWindDir(self, channel):
-	val =  self._read_channel(channel)
-	#val = self._readadc(channel, self.SPICLK, self.SPIMOSI, self.SPIMISO, self.SPICS)
-	
+        val = self._read_channel(channel)
+
         #Shift to 255 range
-	
-        print "val before shift: %s"%val
-        val >>=2;
+        val >>= 2
         reading = float(val*self.clippingFactor)
-        print "reading after shift: %s"%reading
         
         #Look the reading up in directions table. Find the first value
         #that's >= to what we got.
@@ -115,11 +107,7 @@ class WeatherStation(threading.Thread):
                 else:
                     self.counterTimesRep=self.counterTimesRep+1                
 
-        print "Dir: "
-        print self.strVals[x]
-        #print self.strVals[self.currentDir]
-        print " "
-    
+        return self.strVals[x]
      
     def _speed_interrupt(self):
         self.val = GPIO.input(self.speedPin)
@@ -149,6 +137,3 @@ class WeatherStation(threading.Thread):
 
     def kill(self):
         self.exitFlag = True
-
-
-
