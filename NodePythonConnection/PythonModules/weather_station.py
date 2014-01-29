@@ -77,8 +77,8 @@ class WeatherStation(threading.Thread):
                 #self._on_wind_direction_update(self._read_channel(0))
                 self.nextStep = self.current + self.STEP
             time.sleep(0.1)
-	GPIO.cleanup()
 
+	GPIO.cleanup()
     #problem, the value return doesn arrived to the last two directions (over 900)
     def _read_channel(self, channel):
         adcLocal = self.spi.xfer2([1,(8+channel)<<4,0])
@@ -94,7 +94,7 @@ class WeatherStation(threading.Thread):
 	
         print "val before shift: %s"%val
         val >>=2;
-        reading = float(val*clippingFactor)
+        reading = float(val*self.clippingFactor)
         print "reading after shift: %s"%reading
         
         #Look the reading up in directions table. Find the first value
