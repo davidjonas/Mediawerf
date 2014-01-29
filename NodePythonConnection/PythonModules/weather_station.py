@@ -27,6 +27,7 @@ class WeatherStation(threading.Thread):
     strVals = ["W","NW","N","SW","NE","S","SE","E"]
     dirOffset = 0
     STEP = 1000
+    last_rev = 0
     revs = 0
     current = int(time.time()*1000)
     nextStep = current + STEP
@@ -93,7 +94,7 @@ class WeatherStation(threading.Thread):
         #that's >= to what we got.
         for x in range(len(self.adc)):
             if self.adc[x] >= reading:
-                break;
+                break
         x = (x + self.dirOffset) % 8
         if x !=  self.currentDir:
             if x !=  self.nextDir:
@@ -112,7 +113,14 @@ class WeatherStation(threading.Thread):
     def _speed_interrupt(self):
         self.val = GPIO.input(self.speedPin)
         if self.prevVal == 1 and self.val == 0:
-            self.revs = self.revs + 1
+            if self.last_rev == 0:
+                self.last_rev = time.time()
+                self.revs = 0
+            else:
+                currentTime = time.time()
+                self.revs = 1.0 / (currentTime - self.last_rev)
+                self.last_rev = time.time()
+
         self.prevVal = self.val
 
     def _calcSpeed(self):
