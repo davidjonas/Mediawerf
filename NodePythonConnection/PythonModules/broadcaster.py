@@ -15,7 +15,7 @@ class Broadcaster(object):
 
         self.socketIO.on("ack", self.logACK)
 
-    def logAck(self, data):
+    def logACK(self, data):
         print("Acknowledgement received for %s" % data['original'])
 
     def emit(self, event, data):
