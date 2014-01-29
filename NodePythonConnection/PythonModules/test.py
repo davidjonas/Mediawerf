@@ -8,12 +8,12 @@ com = Broadcaster()
 
 def speedUpdate(value):
     global sound
-    print "Wind speed: %s" % value
+    #print "Wind speed: %s" % value
     com.emit("windSpeedUpdate", {'value': value})
 
 def directionUpdate(value):
     global sound
-    print "Wind direction: %s" % value
+    #print "Wind direction: %s" % value
     com.emit("windDirectionUpdate", {'value': value})
 
 

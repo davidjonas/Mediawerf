@@ -24,11 +24,11 @@ class AudioController(object):
             else:
                 print "ERROR: Maximum number of sounds loaded."
 
-    def play_sound(self, filename, fade=0):
+    def play_sound(self, filename, fade=0, loops=0):
         if filename not in self.sounds.keys():
             self.add_sound(filename)
         if filename not in self.channels.keys():
-            self.channels[filename] = self.sounds[filename].play(fadein=int((self.samplerate * fade)))
+            self.channels[filename] = self.sounds[filename].play(fadein=int((self.samplerate * fade)), loops=loops)
         elif self.channels[filename].done:
             del self.channels[filename]
             self.play_sound(filename)
@@ -58,7 +58,7 @@ class AudioController(object):
                 chan.set_position(int(self.samplerate * seconds))
             else:
                 self.play_sound(filename)
-                self.goto_seconds(filename, seconds)
+                self.go_to_seconds(filename, seconds)
         else:
             print "ERROR: Sound is not loaded."
 

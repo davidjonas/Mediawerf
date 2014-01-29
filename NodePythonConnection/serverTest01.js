@@ -29,7 +29,7 @@ io.sockets.on('connection', function(socket) {
         if (data)
         {
             log("Wind speed spdate: " + data['value']);
-            socket.emit("ack", {'original':'windSpeedUpdate'});
+            //socket.emit("ack", {'original':'windSpeedUpdate'});
             socket.broadcast.emit("windSpeedUpdate", data);
         }
         else
@@ -42,7 +42,7 @@ io.sockets.on('connection', function(socket) {
         if (data)
         {
             log("Wind direction update: " + data['value']);
-            socket.emit("ack", {'original':'windDirectionUpdate'});
+            //socket.emit("ack", {'original':'windDirectionUpdate'});
             socket.broadcast.emit("windDirectionUpdate", data);
         }
         else

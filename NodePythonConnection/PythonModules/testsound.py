@@ -10,6 +10,9 @@ ac.add_sound("bg01.wav")
 ac.add_sound("bg02.wav")
 ac.add_sound("sample2.wav")
 ac.add_sound("sample3.wav")
+ac.add_sound("sample4.wav")
+ac.add_sound("sample5.wav")
+
 
 v = 0.2
 
