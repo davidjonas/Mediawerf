@@ -116,7 +116,7 @@ class WeatherStation(threading.Thread):
         self.prevVal = self.val
 
     def _calcSpeed(self):
-        base = 24011
+        base = 24011.0
         speed = base * self.revs
         self.revs = 0
         return speed / 1000

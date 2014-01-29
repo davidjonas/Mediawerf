@@ -22,6 +22,8 @@ def updateSpeed(data):
     val = data["value"]
     #print "windSpeed: %s" % val
     ac.set_volume("bg02.wav", val/50, fade=2.0)
+    ac.set_volume("bg01.wav", val/50 + 0.3, fade=2.0)
+
 
 
 def updateDirection(data):
@@ -62,15 +64,9 @@ print "Starting communications..."
 com = Broadcaster(port=port, host=host)
 com.on("windSpeedUpdate", updateSpeed)
 com.on("windDirectionUpdate", updateDirection)
-com.wait_forever()
 print "communications established."
-
 print "Enjoy..."
 
-while True:
-    try:
-        time.sleep(1000)
-    except:
-        break
+com.wait_forever()
 
 print "Finished"
