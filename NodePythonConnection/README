@@ -12,4 +12,16 @@ After that, install socketIO-client
 
 sudo easy_install socketIO-client
 
-That's all you need
+--------------------
+
+The sound generation is not running properly on the raspberrypi yet so I am doing sound remotely from the laptop.
+It has dependency on:
+
+PortAudio
+pyAudio
+
+
+The data flows like this:
+
+Raspberrypi -running-> PythonModules/test.py -socket to-> serverTest01.js <-over network socket-> laptop -running-> PythonModules/remote_sound.py
+
