@@ -6,8 +6,8 @@ import sys
 import logging
 logging.basicConfig(level=logging.DEBUG)
 
-host = sys.argv[2]
-port = sys.argv[3]
+host = sys.argv[1]
+port = sys.argv[2]
 
 com = Broadcaster(host=host, port=port)
 
