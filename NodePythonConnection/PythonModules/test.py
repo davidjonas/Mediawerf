@@ -2,10 +2,14 @@ from weather_station import WeatherStation
 from broadcaster import Broadcaster
 import time
 import os
+import sys
 import logging
 logging.basicConfig(level=logging.DEBUG)
 
-com = Broadcaster()
+host = sys.argv[2]
+port = sys.argv[3]
+
+com = Broadcaster(host=host, port=port)
 
 
 def speedUpdate(value):

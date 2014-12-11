@@ -3,8 +3,7 @@ var server = require('http').createServer(),
     process = require('process');
 
 //port to listen can be set through command line argument by running 'node server.js [port]' (it defaults to 7080)
-var host = (process.argv.length >= 3) ? process.argv[2] : "localhost";
-var port = (process.argv.length >= 4) ? process.argv[3] : 7080;
+var port = (process.argv.length >= 3) ? process.argv[2] : 8080;
 
 
 function log(str){
