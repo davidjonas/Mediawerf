@@ -2,6 +2,8 @@ from weather_station import WeatherStation
 from broadcaster import Broadcaster
 import time
 import os
+import logging
+logging.basicConfig(level=logging.DEBUG)
 
 com = Broadcaster()
 
