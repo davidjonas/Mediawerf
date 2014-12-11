@@ -8,6 +8,7 @@ logging.basicConfig(level=logging.DEBUG)
 
 host = sys.argv[1]
 port = sys.argv[2]
+id = sys.argv[3]
 
 com = Broadcaster(host=host, port=port)
 
@@ -15,12 +16,12 @@ com = Broadcaster(host=host, port=port)
 def speedUpdate(value):
     global sound
     #print "Wind speed: %s" % value
-    com.emit("windSpeedUpdate", {'value': value})
+    com.emit("windSpeedUpdate", {'value': value, 'id': id})
 
 def directionUpdate(value):
     global sound
     #print "Wind direction: %s" % value
-    com.emit("windDirectionUpdate", {'value': value})
+    com.emit("windDirectionUpdate", {'value': value, 'id': id})
 
 
 ws = WeatherStation(windSpeedCallback=speedUpdate, windDirectionCallback=directionUpdate)
