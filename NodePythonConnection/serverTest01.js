@@ -4,7 +4,7 @@ var server = require('http').createServer(),
 
 //port to listen can be set through command line argument by running 'node server.js [port]' (it defaults to 7080)
 var port = (process.argv.length >= 3) ? process.argv[2] : 8080;
-
+var debug = true;
 
 function log(str){
     if(debug === true){
