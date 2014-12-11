@@ -1,5 +1,5 @@
 var server = require('http').createServer(),
-    io = require('socket.io')(server, {'transports': ['websocket',]}),
+    io = require('socket.io')(server),
     process = require('process');
 
 //port to listen can be set through command line argument by running 'node server.js [port]' (it defaults to 7080)
