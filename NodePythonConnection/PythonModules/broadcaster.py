@@ -11,7 +11,7 @@ class Broadcaster(object):
     def __init__(self, port=8080, host="localhost"):
         self.port = port
         self.host = host
-        self.socketIO = SocketIO(host, int(port), transports=TRANSPORTS)
+        self.socketIO = SocketIO(host, int(port))
 
         self.socketIO.on("ack", self.logACK)
 
