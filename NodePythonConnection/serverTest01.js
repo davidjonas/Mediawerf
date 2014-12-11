@@ -1,11 +1,11 @@
 var server = require('http').createServer(),
-    io = require('socket.io').listen(server),
+    io = require('socket.io')(server, {'transports': ['websocket', 'polling']}),
     process = require('process');
 
 //port to listen can be set through command line argument by running 'node server.js [port]' (it defaults to 7080)
-var port = (process.argv.length >= 3) ? process.argv[2] : 7080;
-//Debugging toggle can also be read on the command line by running node server.js [port] debug
-var debug = process.argv.length >= 4 && process.argv[3] == "debug";
+var host = (process.argv.length >= 3) ? process.argv[2] : "localhost";
+var port = (process.argv.length >= 4) ? process.argv[3] : 7080;
+
 
 function log(str){
     if(debug === true){
@@ -19,7 +19,6 @@ function log(str){
 
 server.listen(port);
 console.log("Server listening on port " + port);
-(debug === true) ? io.set('log level', 2) : io.set('log level', 0);
 
 io.sockets.on('connection', function(socket) {
 
