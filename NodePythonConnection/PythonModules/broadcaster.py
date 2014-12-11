@@ -13,8 +13,6 @@ class Broadcaster(object):
         self.host = host
         self.socketIO = SocketIO(host, int(port), transports=TRANSPORTS)
 
-        import pdb; pdb.set_trace()
-
         self.socketIO.on("ack", self.logACK)
 
     def logACK(self, data):
