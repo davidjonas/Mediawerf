@@ -4,8 +4,6 @@ from socketIO_client import SocketIO
 from socketIO_client.transports import TRANSPORTS
 import sys
 
-import pdb; pdb.set_trace()
-
 class Broadcaster(object):
     port = 8080
     host = "localhost"
@@ -13,7 +11,9 @@ class Broadcaster(object):
     def __init__(self, port=8080, host="localhost"):
         self.port = port
         self.host = host
-        self.socketIO = SocketIO(host, int(port), transports=['websocket', 'polling'])
+        self.socketIO = SocketIO(host, int(port), transports=TRANSPORTS)
+
+        import pdb; pdb.set_trace()
 
         self.socketIO.on("ack", self.logACK)
 
